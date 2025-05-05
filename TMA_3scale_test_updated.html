@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Multidimensionale dell'Autostima - TMA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #f4f9f4;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2e5c3f;
+        }
+        p.description {
+            font-size: 16px;
+            background-color: #e6f0ec;
+            border-left: 6px solid #2e5c3f;
+            padding: 10px 15px;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 30px;
+            background-color: #e1f3e1;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 6px solid #2e5c3f;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-size: 16px;
+            background-color: #2e5c3f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Test Multidimensionale dell'Autostima (TMA)</h1>
+<p class="description">
+    Questo test è composto da tre sezioni: <strong>Interpersonale</strong>, <strong>Emotiva</strong> e <strong>Corporea</strong>.<br>
+    Ogni sezione presenta 25 affermazioni. Per ciascuna, seleziona quanto ritieni che essa sia vera per te.<br>
+    Le opzioni di risposta sono:<br>
+    <em>Assolutamente vero – Vero – Non è vero – Non è assolutamente vero</em><br>
+    Alla fine del test visualizzerai i punteggi di tutte le sezioni. 
+</p>
+
+<form id="tma-form">
+    <div id="section1" class="section"></div>
+    <div id="section2" class="section hidden"></div>
+    <div id="section3" class="section hidden"></div>
+</form>
+
+<div id="results" class="result hidden"></div>
+
+<script>
+const data = {
+    interpersonale: {
+        title: "Sezione Interpersonale",
+        items: [/* questions list here */],
+        reversed: [2, 3, 5, 6, 7, 10, 12, 14, 15, 17, 18, 20, 21, 23, 24, 25]
+    },
+    emotiva: {
+        title: "Sezione Emotiva",
+        items: [/* questions list here */],
+        reversed: [2, 3, 4, 5, 7, 8, 10, 12, 13, 15, 16, 17, 18, 20, 21, 23, 25]
+    },
+    corporea: {
+        title: "Sezione Corporea",
+        items: [/* questions list here */],
+        reversed: [3, 5, 8, 14, 15, 17, 19, 20, 22, 24]
+    }
+};
+
+const questions = {
+    interpersonale: [/* actual questions */],
+    emotiva: [/* actual questions */],
+    corporea: [/* actual questions */]
+};
+
+data.interpersonale.items = [
+    "Di solito con me ci si diverte molto.", "La gente non sembra molto interessata a parlare con me.", "Sono troppo timido.",
+    "Piaccio alla maggior parte della gente.", "Gli altri mi evitano.", "Molte persone si burlano di me.",
+    "Non sono accettato da coloro che mi conoscono.", "La maggior parte della gente mi trova interessante.",
+    "Alla gente piace stare con me.", "Il più delle volte mi sento ignorato.", "Mi sento ammirato dalle persone dell’altro sesso.",
+    "Nessuno ride quando racconto barzellette.", "La maggior parte della gente mi apprezza così come sono.",
+    "Spesso mi sento lasciato fuori.", "La gente dice bugie sul mio conto.", "Ho molti amici.",
+    "Passo molto tempo sentendomi solo.", "Non sono mai sicuro di cosa fare quando mi trovo con persone che non conosco bene.",
+    "Gli altri mi dicono i loro segreti.", "La gente se la prende con me.", "Ho l’impressione che gli altri non si accorgano di me.",
+    "Ricevo molte telefonate dagli amici.", "Molte persone hanno una scarsa opinione di me.",
+    "Permetto agli altri di approfittarsi di me in maniera eccessiva.",
+    "Bisogna che gli altri mi conoscano prima che io possa piacere loro."
+];
+
+data.emotiva.items = [
+    "Mi piace la vita.", "Ho paura di molte cose.", "Ci sono molte cose che vorrei cambiare di me stesso.",
+    "Non riesco a prendermi in giro molto facilmente.", "Non sono una persona felice.", "Sono orgoglioso di me stesso.",
+    "Mi sento un fallimento.", "La mia vita è scoraggiante.", "Sono contento di me così come sono.",
+    "Sono troppo emotivo.", "Ho un buon autocontrollo.", "Spesso deludo me stesso.",
+    "La mia vita è instabile.", "Guardo la vita da una prospettiva positiva.", "Spesso sono confuso riguardo ai miei sentimenti.",
+    "Qualche volta mi sembra di non valere nulla.", "Spesso mi vergogno delle cose che ho fatto.", "Spesso mi sento indifeso.",
+    "Mi sento amato.", "Vorrei essere qualcun altro.", "Mi sento insicuro.", "Sono una brava persona.",
+    "Non sono felice come sembro.", "Di solito sono molto rilassato.", "A volte non mi piaccio."
+];
+
+data.corporea.items = [
+    "Mi sento bene.", "Sono attraente.", "Non sono in forma.", "Quando mi guardo allo specchio, mi piace quello che vedo.",
+    "Mi stanco in fretta.", "Ho bei denti.", "Mi sento a posto indipendentemente dal modo in cui mi vesto.",
+    "Sono brutto/a.", "Sono più forte della maggior parte delle persone della mia età.", "Ho una bella figura.",
+    "Sto bene di salute.", "Mi piace il mio aspetto.", "Riesco bene nella maggior parte degli sport.",
+    "Non mi piace il modo in cui mi stanno gli abiti.", "Normalmente vengo scelto tra gli ultimi per i giochi di squadra.",
+    "Sono fisicamente prestante.", "I miei capelli non hanno mai un bell’aspetto.", "La mia pelle è attraente.",
+    "Non mi piace essere visto/a in costume da bagno.", "Cerco di non far notare agli altri alcune parti del mio corpo.",
+    "I vestiti fanno bella figura su di me.", "Pare che io non abbia l’energia per fare grandi cose.",
+    "Il mio peso è proprio quello giusto.", "Cambierei il mio aspetto se potessi.", "Ho un aspetto grazioso."
+];
+
+function createSection(sectionId, sectionData, nextId, scoreKey) {
+    const container = document.getElementById(sectionId);
+    container.innerHTML = `<h2>${sectionData.title}</h2><p>Per ogni affermazione, seleziona la risposta che meglio rappresenta come ti senti.</p>`;
+    sectionData.items.forEach((text, i) => {
+        const qNum = i + 1;
+        container.innerHTML += `
+        <div class="question">
+            <p><strong>${qNum}.</strong> ${text}</p>
+            <label><input type="radio" name="${scoreKey}-${qNum}" value="4"> Assolutamente vero</label><br>
+            <label><input type="radio" name="${scoreKey}-${qNum}" value="3"> Vero</label><br>
+            <label><input type="radio" name="${scoreKey}-${qNum}" value="2"> Non è vero</label><br>
+            <label><input type="radio" name="${scoreKey}-${qNum}" value="1"> Non è assolutamente vero</label>
+        </div>`;
+    });
+    container.innerHTML += `<button type="button" onclick="submitSection('${sectionId}', '${nextId}', '${scoreKey}')">Continua</button>`;
+}
+
+function submitSection(currentId, nextId, scoreKey) {
+    const inputs = document.querySelectorAll(`#${currentId} input[type="radio"]:checked`);
+    if (inputs.length < 25) {
+        alert("Rispondi a tutte le domande prima di continuare.");
+        return;
+    }
+    const reversed = data[scoreKey].reversed;
+    let score = 0;
+    inputs.forEach((input, idx) => {
+        let val = parseInt(input.value);
+        if (reversed.includes(idx + 1)) val = 5 - val;
+        score += val;
+    });
+    sessionStorage.setItem(scoreKey, score);
+    document.getElementById(currentId).classList.add("hidden");
+    document.getElementById(nextId).classList.remove("hidden");
+
+    if (nextId === "results") showFinalResults();
+}
+
+function showFinalResults() {
+    const res = document.getElementById("results");
+    const s1 = sessionStorage.getItem("interpersonale");
+    const s2 = sessionStorage.getItem("emotiva");
+    const s3 = sessionStorage.getItem("corporea");
+    res.innerHTML = `
+        <h2>Riepilogo dei punteggi</h2>
+        <p><strong>Interpersonale:</strong> ${s1}/100</p>
+        <p><strong>Emotiva:</strong> ${s2}/100</p>
+        <p><strong>Corporea:</strong> ${s3}/100</p>
+        <p><em>Grazie per aver completato il test. Puoi confrontare questi punteggi sulla LIM in aula o discuterne con il tuo insegnante.</em></p>`;
+    res.classList.remove("hidden");
+}
+
+window.onload = function () {
+    createSection("section1", data.interpersonale, "section2", "interpersonale");
+    createSection("section2", data.emotiva, "section3", "emotiva");
+    createSection("section3", data.corporea, "results", "corporea");
+};
+</script>
+</body>
+</html>
